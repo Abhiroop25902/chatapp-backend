@@ -1,6 +1,7 @@
 package com.abhiroop.chatbackend.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,5 +30,20 @@ public class GlobalExceptionHandler {
         );
 
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(EmailAlreadyPresentException.class)
+    public ResponseEntity<String> handleEmailAlreadyPresent(EmailAlreadyPresentException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(PasswordValidationFailException.class)
+    public ResponseEntity<String> handleFailedPasswordException(EmailAlreadyPresentException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(UserNameGenerationFailureException.class)
+    public ResponseEntity<String> handleUserNameGenerationFailure(EmailAlreadyPresentException ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
     }
 }
