@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.util.UUID;
 
-public record UserResponseDTO(
+public record RegisterUserResponseDto(
         @NotBlank(message = "id must be present while returning User Data")
         UUID id,
         String username,
