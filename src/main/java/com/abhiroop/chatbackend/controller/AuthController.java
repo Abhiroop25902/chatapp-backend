@@ -3,6 +3,8 @@ package com.abhiroop.chatbackend.controller;
 import com.abhiroop.chatbackend.dto.RegisterUserRequestDto;
 import com.abhiroop.chatbackend.dto.RegisterUserResponseDto;
 import com.abhiroop.chatbackend.service.UserService;
+import io.github.resilience4j.ratelimiter.RequestNotPermitted;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,7 @@ public class AuthController {
     }
 
 
+    @RateLimiter(name = "registerRateLimiter", fallbackMethod = "rateLimitFallback")
     @PostMapping("/api/vi/auth/register")
     public ResponseEntity<RegisterUserResponseDto> registerUser(@RequestBody RegisterUserRequestDto requestDto) {
 
@@ -32,6 +35,10 @@ public class AuthController {
                         createdUser.getEmail()
                 )
         );
+    }
+
+    public ResponseEntity<RegisterUserResponseDto> rateLimitFallback(RegisterUserRequestDto requestDto, RequestNotPermitted ex) {
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
 }
