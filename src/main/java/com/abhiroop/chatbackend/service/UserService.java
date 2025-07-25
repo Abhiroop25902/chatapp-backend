@@ -33,20 +33,20 @@ public class UserService {
      */
     private @NotNull String generateUserNameUsingEmail(@NotNull String email) {
         final var firstPart = email.split("@")[0];
-        var secondPart = Long.toString(Math.round(Math.random() * 100_000));
+        var secondPart = "";
 
         int retryCount = 0;
 
-        while (retryCount < 10 && userRepository.existsByUsername(firstPart + "#" + secondPart)) {
+        while (retryCount < 10 && userRepository.existsByUsername(firstPart + secondPart)) {
             retryCount++;
-            secondPart = Long.toString(Math.round(Math.random() * 100_000));
+            secondPart = "#" + Math.round(Math.random() * 100_000);
         }
 
         if (retryCount == 10) {
             throw new UserNameGenerationFailureException("Unable to generate username");
         }
 
-        return firstPart + "#" + secondPart;
+        return secondPart.isEmpty() ? firstPart : firstPart + secondPart;
     }
 
     /**
@@ -88,7 +88,7 @@ public class UserService {
 
         String hashedPassword = hashingService.hashPassword(reqDto.password());
         user.setPassword(hashedPassword);
-        
+
         user.setUsername(userName);
 
         return userRepository.save(user);
