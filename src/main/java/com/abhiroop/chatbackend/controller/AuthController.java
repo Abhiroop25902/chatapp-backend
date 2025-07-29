@@ -1,5 +1,7 @@
 package com.abhiroop.chatbackend.controller;
 
+import com.abhiroop.chatbackend.dto.LoginUserRequestDto;
+import com.abhiroop.chatbackend.dto.LoginUserResponseDto;
 import com.abhiroop.chatbackend.dto.RegisterUserRequestDto;
 import com.abhiroop.chatbackend.dto.RegisterUserResponseDto;
 import com.abhiroop.chatbackend.service.UserService;
@@ -38,6 +40,12 @@ public class AuthController {
                         createdUser.getEmail()
                 )
         );
+    }
+
+    @PostMapping("/api/v1/auth/login")
+    public ResponseEntity<LoginUserResponseDto> loginUser(@Valid @RequestBody LoginUserRequestDto requestDto) {
+        final LoginUserResponseDto responseDto = userService.loginUser(requestDto);
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     public ResponseEntity<RegisterUserResponseDto> rateLimitFallback(RegisterUserRequestDto requestDto, RequestNotPermitted ex) {

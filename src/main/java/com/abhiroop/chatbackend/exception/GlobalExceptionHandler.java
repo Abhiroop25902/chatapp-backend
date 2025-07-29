@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
     private static final String ERROR_REASON = "reason";
     private static final String AN_INTERNAL_ERROR_OCCURRED_PLEASE_CONTACT_SUPPORT = "An internal error occurred. Please contact support.";
-    
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDto> handleValidationError(MethodArgumentNotValidException ex) {
         log.warn(ErrorCode.VALIDATION_FAILED.toString(), ex);
@@ -93,6 +93,18 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDto(
                 ErrorCode.USERNAME_GENERATION_FAILED, errors
+        ));
+    }
+
+    @ExceptionHandler(UnauthorizedUserException.class)
+    public ResponseEntity<ErrorResponseDto> handleUnauthorizedUserException(UnauthorizedUserException ex) {
+        log.error(ErrorCode.UNAUTHORIZED_USER.toString(), ex);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDto(
+                ErrorCode.UNAUTHORIZED_USER, errors
         ));
     }
 

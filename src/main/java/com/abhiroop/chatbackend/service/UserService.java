@@ -1,9 +1,12 @@
 package com.abhiroop.chatbackend.service;
 
+import com.abhiroop.chatbackend.dto.LoginUserRequestDto;
+import com.abhiroop.chatbackend.dto.LoginUserResponseDto;
 import com.abhiroop.chatbackend.dto.RegisterUserRequestDto;
 import com.abhiroop.chatbackend.entity.User;
 import com.abhiroop.chatbackend.exception.EmailAlreadyPresentException;
 import com.abhiroop.chatbackend.exception.PasswordValidationFailException;
+import com.abhiroop.chatbackend.exception.UnauthorizedUserException;
 import com.abhiroop.chatbackend.exception.UserNameGenerationFailureException;
 import com.abhiroop.chatbackend.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
@@ -15,11 +18,13 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final HashingService hashingService;
+    private final JwtService jwtService;
 
     @Autowired
-    public UserService(UserRepository userRepository, HashingService hashingService) {
+    public UserService(UserRepository userRepository, HashingService hashingService, JwtService jwtService) {
         this.userRepository = userRepository;
         this.hashingService = hashingService;
+        this.jwtService = jwtService;
     }
 
     private boolean emailAlreadyPresent(String email) {
@@ -92,5 +97,24 @@ public class UserService {
         user.setUsername(userName);
 
         return userRepository.save(user);
+    }
+
+    public LoginUserResponseDto loginUser(@NotNull LoginUserRequestDto reqDto) {
+        final var existingUserOptional = userRepository.findByEmail(reqDto.email());
+
+        if (existingUserOptional.isEmpty()) throw new UnauthorizedUserException("Login Failed");
+
+        final var existingUser = existingUserOptional.get();
+
+        if (!hashingService.verifyPassword(reqDto.password(), existingUser.getPassword()))
+            throw new UnauthorizedUserException("Login Failed");
+
+        final var jwt = jwtService.generateToken(existingUser.getId());
+
+        return new LoginUserResponseDto(
+                existingUser.getId(),
+                existingUser.getEmail(),
+                jwt
+        );
     }
 }
