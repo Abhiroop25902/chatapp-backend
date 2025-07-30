@@ -19,12 +19,14 @@ public class UserService {
     private final UserRepository userRepository;
     private final HashingService hashingService;
     private final JwtService jwtService;
+    private final RefreshTokenService refreshTokenService;
 
     @Autowired
-    public UserService(UserRepository userRepository, HashingService hashingService, JwtService jwtService) {
+    public UserService(UserRepository userRepository, HashingService hashingService, JwtService jwtService, RefreshTokenService refreshTokenService) {
         this.userRepository = userRepository;
         this.hashingService = hashingService;
         this.jwtService = jwtService;
+        this.refreshTokenService = refreshTokenService;
     }
 
     private boolean emailAlreadyPresent(String email) {
@@ -110,11 +112,13 @@ public class UserService {
             throw new UnauthorizedUserException("Login Failed");
 
         final var jwt = jwtService.generateToken(existingUser.getId());
+        final var refreshToken = refreshTokenService.generateRefreshTokenForUser(existingUser).getToken();
 
         return new LoginUserResponseDto(
                 existingUser.getId(),
                 existingUser.getEmail(),
-                jwt
+                "Bearer " + jwt,
+                refreshToken
         );
     }
 }

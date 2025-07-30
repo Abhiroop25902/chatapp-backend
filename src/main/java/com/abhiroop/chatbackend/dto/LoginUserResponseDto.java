@@ -12,7 +12,9 @@ public record LoginUserResponseDto(
         @Email
         String email,
         @NotBlank
-        String token
+        String token,
+        @NotBlank
+        String refreshToken
 
 ) {
 }
