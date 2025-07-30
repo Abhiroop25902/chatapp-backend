@@ -104,12 +104,12 @@ public class UserService {
     public LoginUserResponseDto loginUser(@NotNull LoginUserRequestDto reqDto) {
         final var existingUserOptional = userRepository.findByEmail(reqDto.email());
 
-        if (existingUserOptional.isEmpty()) throw new UnauthorizedUserException("Login Failed");
+        if (existingUserOptional.isEmpty()) throw new UnauthorizedUserException("Invalid credentials");
 
         final var existingUser = existingUserOptional.get();
 
         if (!hashingService.verifyPassword(reqDto.password(), existingUser.getPassword()))
-            throw new UnauthorizedUserException("Login Failed");
+            throw new UnauthorizedUserException("Invalid credentials");
 
         final var jwt = jwtService.generateToken(existingUser.getId());
         final var refreshToken = refreshTokenService.generateRefreshTokenForUser(existingUser).getToken();
