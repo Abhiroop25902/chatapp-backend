@@ -33,4 +33,10 @@ public class RefreshTokenService {
 
         return refreshTokenRepository.save(refreshToken);
     }
+
+    public void deleteRefreshTokenForUserIfExist(User user) {
+        final var refreshToken = refreshTokenRepository.findByUser(user);
+
+        refreshToken.ifPresent(refreshTokenRepository::delete);
+    }
 }

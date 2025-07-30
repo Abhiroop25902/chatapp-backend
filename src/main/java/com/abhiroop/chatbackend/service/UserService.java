@@ -112,6 +112,7 @@ public class UserService {
             throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials");
 
         final var jwt = jwtService.generateToken(existingUser.getId());
+        refreshTokenService.deleteRefreshTokenForUserIfExist(existingUser);
         final var refreshToken = refreshTokenService.generateRefreshTokenForUser(existingUser).getToken();
 
         return new LoginUserResponseDto(
