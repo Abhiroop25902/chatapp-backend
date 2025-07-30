@@ -28,12 +28,12 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, name = "createdat", updatable = false)
+    @Column(nullable = false, name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     private LocalDateTime createdAt;
 
-    @Column(nullable = false, name = "updatedat")
+    @Column(nullable = false, name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
