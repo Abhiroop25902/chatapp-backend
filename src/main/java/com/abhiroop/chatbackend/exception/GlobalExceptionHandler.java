@@ -98,7 +98,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UnauthorizedUserException.class)
     public ResponseEntity<ErrorResponseDto> handleUnauthorizedUserException(UnauthorizedUserException ex) {
-        log.error(ErrorCode.UNAUTHORIZED_USER.toString(), ex);
+        log.warn("{}: {}", ErrorCode.UNAUTHORIZED_USER, ex.getEmail(), ex);
 
         Map<String, String> errors = new HashMap<>();
         errors.put(ERROR_REASON, ex.getMessage());
