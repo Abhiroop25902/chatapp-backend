@@ -42,9 +42,11 @@ public class AuthController {
         );
     }
 
+    @RateLimiter(name = "loginRateLimiter", fallbackMethod = "rateLimitFallback")
     @PostMapping("/api/v1/auth/login")
     public ResponseEntity<LoginUserResponseDto> loginUser(@Valid @RequestBody LoginUserRequestDto requestDto) {
         final LoginUserResponseDto responseDto = userService.loginUser(requestDto);
+        log.info("login success for email {}", responseDto.email());
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
