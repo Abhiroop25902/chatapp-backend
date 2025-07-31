@@ -13,9 +13,13 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UserService {
 
+    private static final int MAX_FAILED_ATTEMPTS = 3;
+    private static final int LOCK_DELAY_IN_DAY = 1;
     private final UserRepository userRepository;
     private final HashingService hashingService;
     private final JwtService jwtService;
@@ -105,8 +109,26 @@ public class UserService {
 
         final var existingUser = existingUserOptional.get();
 
-        if (!hashingService.verifyPassword(reqDto.password(), existingUser.getPassword()))
-            throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials");
+        if (existingUser.isAccountLocked() && existingUser.getLockTime().isAfter(LocalDateTime.now()))
+            throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials, account locked");
+
+        if (!hashingService.verifyPassword(reqDto.password(), existingUser.getPassword())) {
+            existingUser.incrementFailedAttempts();
+
+            if (existingUser.getFailedAttempts() >= MAX_FAILED_ATTEMPTS) {
+                existingUser.setLockTime(LocalDateTime.now().plusDays(LOCK_DELAY_IN_DAY));
+                existingUser.setFailedAttempts(MAX_FAILED_ATTEMPTS);
+                existingUser.setAccountLocked(true);
+                userRepository.save(existingUser);
+                throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials, account locked");
+            }
+
+            userRepository.save(existingUser);
+            throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials, you have " + (MAX_FAILED_ATTEMPTS - existingUser.getFailedAttempts()) + " more chance(es)");
+        }
+
+        existingUser.unlockAccountForLogin();
+        userRepository.save(existingUser);
 
         final var jwt = jwtService.generateToken(existingUser.getId());
         refreshTokenService.deleteRefreshTokenForUserIfExist(existingUser);

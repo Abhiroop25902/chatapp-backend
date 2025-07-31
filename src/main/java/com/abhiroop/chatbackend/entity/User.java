@@ -50,8 +50,23 @@ public class User {
     @Builder.Default
     private boolean accountLocked = false;
 
-    @Column(nullable = true, name = "lock_time")
+    @Column(name = "lock_time")
     @Builder.Default
     private LocalDateTime lockTime = null;
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    public void incrementFailedAttempts() {
+        this.failedAttempts++;
+    }
+
+    public void unlockAccountForLogin() {
+        this.lockTime = null;
+        this.accountLocked = false;
+        this.failedAttempts = 0;
+    }
 
 }
