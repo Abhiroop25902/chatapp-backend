@@ -89,16 +89,13 @@ public class UserService {
         }
 
         final var userName = generateUserNameUsingEmail(reqDto.email());
-
-        final var user = new User();
-        user.setEmail(reqDto.email().trim());
-
         String hashedPassword = hashingService.hashPassword(reqDto.password());
-        user.setPassword(hashedPassword);
 
-        user.setUsername(userName);
-
-        return userRepository.save(user);
+        return userRepository.save(User.builder()
+                .email(reqDto.email().trim())
+                .password(hashedPassword)
+                .username(userName)
+                .build());
     }
 
     public LoginUserResponseDto loginUser(@NotNull LoginUserRequestDto reqDto) {

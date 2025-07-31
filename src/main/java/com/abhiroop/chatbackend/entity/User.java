@@ -1,8 +1,7 @@
 package com.abhiroop.chatbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -13,6 +12,9 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "users", schema = "auth_schema")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
 
     @Id
@@ -31,14 +33,25 @@ public class User {
     @Column(nullable = false, name = "created_at", updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false, name = "updated_at")
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    @Builder.Default
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
-    public User() {
+    @Column(nullable = false, name = "failed_attempts")
+    @Builder.Default
+    private int failedAttempts = 0;
 
-    }
+    @Column(nullable = false, name = "account_locked")
+    @Builder.Default
+    private boolean accountLocked = false;
+
+    @Column(nullable = true, name = "lock_time")
+    @Builder.Default
+    private LocalDateTime lockTime = null;
+
 }
