@@ -1,8 +1,7 @@
 package com.abhiroop.chatbackend.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -11,6 +10,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(schema = "auth_schema", name = "refresh_tokens")
 public class RefreshToken {
 

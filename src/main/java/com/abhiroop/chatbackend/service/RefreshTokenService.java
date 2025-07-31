@@ -12,6 +12,7 @@ import java.util.Base64;
 
 @Service
 public class RefreshTokenService {
+    private static final int REFRESH_TOKEN_EXPIRY_DELAY_IN_DAY = 7;
     private final RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
@@ -26,12 +27,12 @@ public class RefreshTokenService {
     }
 
     public RefreshToken generateRefreshTokenForUser(User user) {
-        final var refreshToken = new RefreshToken();
-        refreshToken.setUser(user);
-        refreshToken.setToken(generateRefreshTokenString());
-        refreshToken.setExpireAt(LocalDateTime.now().plusDays(7));
-
-        return refreshTokenRepository.save(refreshToken);
+        return refreshTokenRepository.save(RefreshToken.builder()
+                .user(user)
+                .token(generateRefreshTokenString())
+                .expireAt(LocalDateTime.now().plusDays(REFRESH_TOKEN_EXPIRY_DELAY_IN_DAY))
+                .build()
+        );
     }
 
     public void deleteRefreshTokenForUserIfExist(User user) {
