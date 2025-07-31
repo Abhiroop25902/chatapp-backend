@@ -28,7 +28,7 @@ public class AuthController {
     }
 
 
-    @RateLimiter(name = "registerRateLimiter", fallbackMethod = "rateLimitFallback")
+    @RateLimiter(name = "registerRateLimiter", fallbackMethod = "registerRateLimitFallback")
     @PostMapping("/api/v1/auth/register")
     public ResponseEntity<RegisterUserResponseDto> registerUser(@Valid @RequestBody RegisterUserRequestDto requestDto) {
         final var createdUser = userService.saveUser(requestDto);
@@ -42,7 +42,12 @@ public class AuthController {
         );
     }
 
-    @RateLimiter(name = "loginRateLimiter", fallbackMethod = "rateLimitFallback")
+    public ResponseEntity<RegisterUserResponseDto> registerRateLimitFallback(RegisterUserRequestDto requestDto, RequestNotPermitted ex) {
+        log.warn(ex.toString());
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+    @RateLimiter(name = "loginRateLimiter", fallbackMethod = "loginRateLimitFallback")
     @PostMapping("/api/v1/auth/login")
     public ResponseEntity<LoginUserResponseDto> loginUser(@Valid @RequestBody LoginUserRequestDto requestDto) {
         final LoginUserResponseDto responseDto = userService.loginUser(requestDto);
@@ -50,7 +55,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
-    public ResponseEntity<RegisterUserResponseDto> rateLimitFallback(RegisterUserRequestDto requestDto, RequestNotPermitted ex) {
+    public ResponseEntity<LoginUserResponseDto> loginRateLimitFallback(LoginUserRequestDto loginDto, RequestNotPermitted ex) {
         log.warn(ex.toString());
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
