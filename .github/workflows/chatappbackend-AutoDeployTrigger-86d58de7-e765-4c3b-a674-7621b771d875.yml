@@ -4,19 +4,19 @@ name: Trigger auto deployment for chatappbackend
 on:
   # Automatically trigger it when detected changes in repo
   push:
-    branches: 
+    branches:
       [ main ]
     paths:
-    - '**'
-    - '.github/workflows/chatappbackend-AutoDeployTrigger-86d58de7-e765-4c3b-a674-7621b771d875.yml'
+      - '**'
+      - '.github/workflows/chatappbackend-AutoDeployTrigger-86d58de7-e765-4c3b-a674-7621b771d875.yml'
 
   # Allow manual trigger 
-  workflow_dispatch:      
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    permissions: 
+    permissions:
       id-token: write #This is required for requesting the OIDC JWT Token
       contents: read #Required when GH token is used to authenticate with private repo
 
@@ -35,15 +35,11 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           appSourcePath: ${{ github.workspace }}
-          _dockerfilePathKey_: _dockerfilePath_
-          _targetLabelKey_: _targetLabel_
-          registryUrl: 
+          dockerfilePath: ./Dockerfile
+          targetLabel: chatAppBackend
+          acrName: chatappbackendcontainerregistry
           registryUsername: ${{ secrets.CHATAPPBACKEND_REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.CHATAPPBACKEND_REGISTRY_PASSWORD }}
           containerAppName: chatappbackend
           resourceGroup: chatappWebsite
           imageToBuild: default/[parameters('containerAppName')]:${{ github.sha }}
-          _buildArgumentsKey_: |
-            _buildArgumentsValues_
-
-
