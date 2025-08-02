@@ -42,4 +42,4 @@ jobs:
           registryPassword: ${{ secrets.CHATAPPBACKEND_REGISTRY_PASSWORD }}
           containerAppName: chatappbackend
           resourceGroup: chatappWebsite
-          imageToBuild: default/[parameters('containerAppName')]:${{ github.sha }}
+          imageToBuild: chatappbackendcontainerregistry-fec9grddbdbzf5an.azurecr.io/chatappbackend:${{ github.sha }}
