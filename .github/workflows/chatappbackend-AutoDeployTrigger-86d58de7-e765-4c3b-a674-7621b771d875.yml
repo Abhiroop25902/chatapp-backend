@@ -36,7 +36,6 @@ jobs:
         with:
           appSourcePath: ${{ github.workspace }}
           dockerfilePath: ./Dockerfile
-          targetLabel: ${{ github.sha }}
           registryUrl: chatappbackendcontainerregistry-fec9grddbdbzf5an.azurecr.io
           registryUsername: ${{ secrets.REGISTRY_USERNAME }}
           registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
