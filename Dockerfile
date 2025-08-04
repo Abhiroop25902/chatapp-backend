@@ -11,6 +11,6 @@ COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s \
   CMD curl -f http://localhost:8080/health || exit 1
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dserver.port=$PORT -jar app.jar"]
 
 

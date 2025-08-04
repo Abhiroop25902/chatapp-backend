@@ -7,8 +7,10 @@ on:
     branches:
       [ main ]
     paths:
-      - '**'
+      - 'src/main/**'
       - '.github/workflows/chatappbackend-AutoDeployTrigger-86d58de7-e765-4c3b-a674-7621b771d875.yml'
+      - 'Dockerfile'
+      - 'build.gradle'
 
   # Allow manual trigger 
   workflow_dispatch:
