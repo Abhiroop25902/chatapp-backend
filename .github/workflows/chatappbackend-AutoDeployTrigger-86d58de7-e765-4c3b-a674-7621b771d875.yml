@@ -37,7 +37,9 @@ jobs:
           appSourcePath: ${{ github.workspace }}
           dockerfilePath: ./Dockerfile
           targetLabel: chatAppBackend
-          acrName: chatappbackendcontainerregistry
+          registryUrl: chatappbackendcontainerregistry-fec9grddbdbzf5an.azurecr.io
+          registryUsername: ${{ secrets.REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.REGISTRY_PASSWORD }}
           containerAppName: chatappbackend
           resourceGroup: chatappWebsite
           imageToBuild: chatappbackendcontainerregistry-fec9grddbdbzf5an.azurecr.io/chatappbackend:${{ github.sha }}
