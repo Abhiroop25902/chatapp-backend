@@ -9,8 +9,6 @@ FROM mcr.microsoft.com/openjdk/jdk:21-azurelinux
 WORKDIR /app
 COPY --from=builder /home/gradle/project/build/libs/*.jar app.jar
 EXPOSE 3000
-#HEALTHCHECK --interval=30s --timeout=5s --start-period=5s \
-#  CMD curl -f http://localhost:8080/health || exit 1
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
 
