@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static com.abhiroop.chatbackend.lib.UnauthenticatedPaths.EXCLUDED_PATHS;
+import static com.abhiroop.chatbackend.lib.Constants.JWT_CHECK_EXCLUDED_PATHS;
 
 @EnableWebSecurity
 @Configuration
@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable) // disable
                 .csrf(AbstractHttpConfigurer::disable) // disable csrf, will not affect APIs as we aren't handling with session or cookies
                 .authorizeHttpRequests(auth -> {
-                            EXCLUDED_PATHS.forEach(path -> auth.requestMatchers(path).permitAll());
+                            JWT_CHECK_EXCLUDED_PATHS.forEach(path -> auth.requestMatchers(path).permitAll());
                             auth.anyRequest().authenticated();
                         }
                 )

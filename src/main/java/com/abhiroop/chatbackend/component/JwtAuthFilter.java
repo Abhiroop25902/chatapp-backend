@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.abhiroop.chatbackend.lib.UnauthenticatedPaths.EXCLUDED_PATHS;
+import static com.abhiroop.chatbackend.lib.Constants.JWT_CHECK_EXCLUDED_PATHS;
 
 @Slf4j
 @Component
@@ -40,7 +40,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
-        if (EXCLUDED_PATHS.stream().anyMatch(request.getRequestURI()::equals)) {
+        if (JWT_CHECK_EXCLUDED_PATHS.stream().anyMatch(request.getRequestURI()::equals)) {
             filterChain.doFilter(request, response);
             return;
         }
