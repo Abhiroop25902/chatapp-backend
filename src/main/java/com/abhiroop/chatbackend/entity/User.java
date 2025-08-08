@@ -6,12 +6,18 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static com.abhiroop.chatbackend.lib.Constants.SCHEMA_NAME;
+import static com.abhiroop.chatbackend.lib.Constants.USER_TABLE_NAME;
 
 @Setter
 @Getter
 @Entity
-@Table(name = "users", schema = "auth_schema")
+@Table(name = USER_TABLE_NAME, schema = SCHEMA_NAME)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

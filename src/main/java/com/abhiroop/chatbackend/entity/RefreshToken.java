@@ -7,13 +7,16 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
 
+import static com.abhiroop.chatbackend.lib.Constants.REFRESH_TOKENS_TABLE_NAME;
+import static com.abhiroop.chatbackend.lib.Constants.SCHEMA_NAME;
+
 @Getter
 @Setter
 @Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(schema = "auth_schema", name = "refresh_tokens")
+@Table(name = REFRESH_TOKENS_TABLE_NAME, schema = SCHEMA_NAME)
 public class RefreshToken {
 
     @Id
