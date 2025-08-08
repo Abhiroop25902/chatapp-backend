@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
+import static com.abhiroop.chatbackend.lib.enums.UnauthenticatedPaths.EXCLUDED_PATHS;
+
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
@@ -22,17 +24,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable) // disable csrf, will not affect APIs as we aren't handling with session or cookies
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/health").permitAll()
-                        .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> {
+                            EXCLUDED_PATHS.forEach(path -> auth.requestMatchers(path).permitAll());
+                            auth.anyRequest().authenticated();
+                        }
                 )
                 .formLogin(AbstractHttpConfigurer::disable) // Disable form-based login
-                .httpBasic(AbstractHttpConfigurer::disable); // Disable basic auth
-
-        return http.build();
+                .httpBasic(AbstractHttpConfigurer::disable) // Disable basic auth
+                .build();
     }
 
     //Disable Security Password Generation by Spring Security
