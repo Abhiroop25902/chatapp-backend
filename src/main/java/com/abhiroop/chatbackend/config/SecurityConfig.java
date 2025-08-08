@@ -11,6 +11,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 import static com.abhiroop.chatbackend.lib.enums.UnauthenticatedPaths.EXCLUDED_PATHS;
 
@@ -28,6 +33,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(AbstractHttpConfigurer::disable) // disable
                 .csrf(AbstractHttpConfigurer::disable) // disable csrf, will not affect APIs as we aren't handling with session or cookies
                 .authorizeHttpRequests(auth -> {
                             EXCLUDED_PATHS.forEach(path -> auth.requestMatchers(path).permitAll());
@@ -38,6 +44,23 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable) // Disable basic auth
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    //Cors Setup
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        final CorsConfiguration config = new CorsConfiguration();
+
+        //TODO: once frontend is built, have to change the cors setup
+        //TODO: also think about magic strings here when you do that
+        config.setAllowedOrigins(List.of("*"));
+        config.setAllowedHeaders(List.of("GET", "POST", "PUT", "DELETE"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
+
+        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     //Disable Security Password Generation by Spring Security
