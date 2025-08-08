@@ -108,6 +108,18 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(JwtValidationException.class)
+    public ResponseEntity<ErrorResponseDto> handleJwtValidationException(JwtValidationException ex) {
+        log.warn(ErrorCode.JWT_VALIDATION_FAILED.toString(), ex);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new ErrorResponseDto(
+                ErrorCode.JWT_VALIDATION_FAILED, errors
+        ));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception ex) {
         log.error(ErrorCode.UNHANDLED_EXCEPTION_OCCURRED.toString(), ex);
