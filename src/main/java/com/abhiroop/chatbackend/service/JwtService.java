@@ -38,7 +38,11 @@ public class JwtService {
                 .compact();
     }
 
-    private UUID getUuidFromToken(String token) {
+    public UUID getUuidFromToken(String token) {
         return UUID.fromString(jwtParser.parseSignedClaims(token).getPayload().getSubject());
+    }
+
+    public boolean isTokenExpired(String token) {
+        return jwtParser.parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 }
