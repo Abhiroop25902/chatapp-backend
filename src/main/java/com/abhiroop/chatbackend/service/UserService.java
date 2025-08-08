@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -140,5 +141,13 @@ public class UserService {
                 "Bearer " + jwt,
                 refreshToken
         );
+    }
+
+    public boolean uuidPresent(@NotNull UUID uuid) {
+        return userRepository.existsById(uuid);
+    }
+
+    public User getUserById(@NotNull UUID uuid) {
+        return userRepository.findById(uuid).orElse(null);
     }
 }
