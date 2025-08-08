@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -110,7 +111,9 @@ public class UserService {
 
         final var existingUser = existingUserOptional.get();
 
-        if (existingUser.isAccountLocked() && existingUser.getLockTime().isAfter(LocalDateTime.now()))
+        if (existingUser.isAccountLocked() &&
+                Optional.of(existingUser.getLockTime()).map(time -> time.isAfter(LocalDateTime.now())).orElse(false)
+        )
             throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials, account locked");
 
         if (!hashingService.verifyPassword(reqDto.password(), existingUser.getPassword())) {
