@@ -131,8 +131,7 @@ public class UserService {
             throw new UnauthorizedUserException(reqDto.email(), "Invalid credentials, you have " + (MAX_FAILED_ATTEMPTS - existingUser.getFailedAttempts()) + " more chance(es)");
         }
 
-        existingUser.unlockAccountForLogin();
-        userRepository.save(existingUser);
+        unlockUser(existingUser);
 
         final var jwt = jwtService.generateToken(existingUser.getId());
         refreshTokenService.deleteRefreshTokenForUserIfExist(existingUser);
@@ -144,6 +143,11 @@ public class UserService {
                 "Bearer " + jwt,
                 refreshToken
         );
+    }
+
+    public void unlockUser(User user) {
+        user.unlockAccountForLogin();
+        userRepository.save(user);
     }
 
     public boolean uuidPresent(@NotNull UUID uuid) {
