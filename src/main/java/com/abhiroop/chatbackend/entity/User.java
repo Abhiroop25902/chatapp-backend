@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -60,6 +62,10 @@ public class User {
     @Builder.Default
     private LocalDateTime lockTime = null;
 
+    @Column(name = "roles", nullable = false)
+    @Builder.Default
+    private String roles = "ROLE_USER";
+
     @PreUpdate
     protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
@@ -73,6 +79,10 @@ public class User {
         this.lockTime = null;
         this.accountLocked = false;
         this.failedAttempts = 0;
+    }
+
+    public Collection<GrantedAuthority> getAuthorities() {
+        return Arrays.stream(roles.split(",")).map(SimpleGrantedAuthority::new).collect(Collectors.toList());
     }
 
 }
