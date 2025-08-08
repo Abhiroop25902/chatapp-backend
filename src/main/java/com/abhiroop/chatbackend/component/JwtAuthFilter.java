@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static com.abhiroop.chatbackend.lib.enums.UnauthenticatedPaths.EXCLUDED_PATHS;
 
@@ -24,6 +26,7 @@ import static com.abhiroop.chatbackend.lib.enums.UnauthenticatedPaths.EXCLUDED_P
 public class JwtAuthFilter extends OncePerRequestFilter {
     static final String AUTHORIZATION_HEADER = "Authorization";
     static final String ERROR_MESSAGE = "Invalid or Expired JWT Token";
+    static final String ACCOUNT_LOCKED = "Account locked";
 
     final JwtService jwtService;
     final UserService userService;
@@ -67,8 +70,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throw new JwtValidationException(ERROR_MESSAGE);
         }
 
+        final var user = userService.getUserById(uuid);
+
+        if (user.isAccountLocked() &&
+                Optional.of(user.getLockTime()).map(time -> time.isAfter(LocalDateTime.now())).orElse(false)
+        ) {
+            log.warn("User associated with jwt is found, but the account is locked, jwt={}", jwt.substring(0, 10));
+            throw new JwtValidationException(ACCOUNT_LOCKED);
+        }
+
+        userService.unlockUser(user);
+
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
-            final var user = userService.getUserById(uuid);
+
             final var token = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(token);
         }
