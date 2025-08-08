@@ -1,4 +1,4 @@
-package com.abhiroop.chatbackend.lib.enums;
+package com.abhiroop.chatbackend.lib;
 
 import java.util.List;
 

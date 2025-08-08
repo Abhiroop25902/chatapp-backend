@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.abhiroop.chatbackend.lib.enums.UnauthenticatedPaths.EXCLUDED_PATHS;
+import static com.abhiroop.chatbackend.lib.UnauthenticatedPaths.EXCLUDED_PATHS;
 
 @Slf4j
 @Component

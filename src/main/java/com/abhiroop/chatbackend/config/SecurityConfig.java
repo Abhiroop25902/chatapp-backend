@@ -17,7 +17,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static com.abhiroop.chatbackend.lib.enums.UnauthenticatedPaths.EXCLUDED_PATHS;
+import static com.abhiroop.chatbackend.lib.UnauthenticatedPaths.EXCLUDED_PATHS;
 
 @EnableWebSecurity
 @Configuration
