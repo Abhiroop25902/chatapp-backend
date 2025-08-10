@@ -65,7 +65,7 @@ public class User {
     private String roles = "ROLE_USER";
 
     @Builder.Default
-    @Column(name = "is_deleted", nullable = false)
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "bit default 0")
     private boolean isDeleted = false;
 
 
