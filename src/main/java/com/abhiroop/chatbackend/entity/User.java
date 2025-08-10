@@ -64,10 +64,10 @@ public class User {
     @Builder.Default
     private String roles = "ROLE_USER";
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
+    @Builder.Default
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted = false;
+
 
     public void incrementFailedAttempts() {
         this.failedAttempts++;
