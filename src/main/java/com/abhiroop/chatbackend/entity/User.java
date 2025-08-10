@@ -39,13 +39,11 @@ public class User {
     private String password;
 
     @Column(nullable = false, name = "created_at", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(nullable = false, name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
