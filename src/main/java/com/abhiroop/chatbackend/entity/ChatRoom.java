@@ -4,6 +4,8 @@ import com.abhiroop.chatbackend.lib.ChatRoomType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -34,6 +36,7 @@ public class ChatRoom {
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_room_user"))
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private User createdBy;
 
     // NOTE: adding column definition makes this app bound to Azure SQL
