@@ -24,12 +24,12 @@ public class MessageReadStatus {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "message_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_message_read_status_message"))
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Message message;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_message_read_status_user"))
     private User user;
 

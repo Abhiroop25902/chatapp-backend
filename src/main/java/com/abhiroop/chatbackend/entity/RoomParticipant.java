@@ -30,11 +30,11 @@ public class RoomParticipant {
     private Long id;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "room_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_room_participant_chat_room"))
     private ChatRoom chatRoom;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "fk_room_participant_user"))
     private User user;
 

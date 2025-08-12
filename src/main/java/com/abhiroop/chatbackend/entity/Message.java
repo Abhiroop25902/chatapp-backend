@@ -24,12 +24,12 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_room_id", nullable = false, foreignKey = @ForeignKey(name = "fk_message_chat_room"), updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ChatRoom room;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sender_id", nullable = false, foreignKey = @ForeignKey(name = "fk_message_sender"), updatable = false)
     private User sender;
 
@@ -40,7 +40,7 @@ public class Message {
     @Column(name = "content", nullable = false)
     private String content;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_to_message_id", foreignKey = @ForeignKey(name = "fk_message_replyTo_message"))
     @Builder.Default
     private Message replyToMessage = null;
@@ -52,7 +52,6 @@ public class Message {
     @CreationTimestamp
     @Column(name = "sent_at", nullable = false, updatable = false)
     private LocalDateTime sentAt;
-
 
     @UpdateTimestamp
     @Column(name = "edited_at", nullable = false)

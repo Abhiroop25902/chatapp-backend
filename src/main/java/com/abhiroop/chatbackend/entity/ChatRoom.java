@@ -34,7 +34,7 @@ public class ChatRoom {
     @Enumerated(EnumType.STRING)
     private ChatRoomType type;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_room_user"))
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private User createdBy;

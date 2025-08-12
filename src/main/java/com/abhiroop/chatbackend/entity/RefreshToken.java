@@ -23,7 +23,7 @@ public class RefreshToken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_refresh_token_user"), nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
