@@ -12,6 +12,13 @@ public interface MessageRepository extends JpaRepository<Message, UUID> {
 
     // db contains fulltext index on message content
     @Query(nativeQuery = true,
-            value = "SELECT * FROM chat_app.messages WHERE CONTAINS(content, :keyword)")
-    List<Message> searchByKeyword(@Param("keyword") String keyword);
+            value = """
+                    select m.*
+                    from chat_app.messages m
+                    where m.chat_room_id = :room_id
+                        and CONTAINS(content, :keyword)
+                    """)
+    List<Message> searchByKeywordInChatRoom(@Param("room_id") UUID roomId, @Param("keyword") String keyword);
+
+
 }
