@@ -46,6 +46,7 @@ public class RoomParticipant {
     @Column(name = "left_at")
     private LocalDateTime leftAt = null;
 
+    @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "room_participant_role", nullable = false)
     private RoomParticipantRole roomParticipantRole = RoomParticipantRole.MEMBER;
