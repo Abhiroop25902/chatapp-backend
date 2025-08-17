@@ -1,7 +1,9 @@
 package com.abhiroop.chatbackend.service;
 
+import com.abhiroop.chatbackend.dto.ChatRoomCreateRequestDto;
 import com.abhiroop.chatbackend.entity.ChatRoom;
 import com.abhiroop.chatbackend.entity.User;
+import com.abhiroop.chatbackend.lib.enums.RoomType;
 import com.abhiroop.chatbackend.repository.ChatRoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -29,5 +31,21 @@ public class ChatRoomService {
     public List<ChatRoom> getActiveDmRoomsForCurrentUser() {
         final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return chatRoomRepository.findActiveDmChatRoomByUserId(user.getId());
+    }
+
+    @Secured("ROLE_USER")
+    public ChatRoom createChatRoom(ChatRoomCreateRequestDto chatRoomCreateRequestDto) {
+        final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        final var chatRoom = ChatRoom.builder()
+                .name(chatRoomCreateRequestDto.roomName())
+                .description(chatRoomCreateRequestDto.roomDescription())
+                .createdBy(user)
+                .type(chatRoomCreateRequestDto.roomType())
+                .maxParticipants(chatRoomCreateRequestDto.roomType() == RoomType.DIRECT_MESSAGE ? 2 : 50)
+                .build();
+
+
+        return chatRoomRepository.save(chatRoom);
     }
 }
