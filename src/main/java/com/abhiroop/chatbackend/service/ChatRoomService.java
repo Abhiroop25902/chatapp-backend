@@ -24,4 +24,10 @@ public class ChatRoomService {
         final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return chatRoomRepository.findActiveChatRoomsByUserId(user.getId());
     }
+
+    @Secured("ROLE_USER")
+    public List<ChatRoom> getActiveDmRoomsForCurrentUser() {
+        final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return chatRoomRepository.findActiveDmChatRoomByUserId(user.getId());
+    }
 }
