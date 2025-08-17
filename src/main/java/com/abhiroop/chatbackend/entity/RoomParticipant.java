@@ -1,6 +1,6 @@
 package com.abhiroop.chatbackend.entity;
 
-import com.abhiroop.chatbackend.lib.RoomParticipantRole;
+import com.abhiroop.chatbackend.lib.enums.ParticipantRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -49,7 +49,7 @@ public class RoomParticipant {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(name = "room_participant_role", nullable = false)
-    private RoomParticipantRole roomParticipantRole = RoomParticipantRole.MEMBER;
+    private ParticipantRole participantRole = ParticipantRole.MEMBER;
 
     @Builder.Default
     @Column(name = "is_active", nullable = false, columnDefinition = "BIT DEFAULT 1")

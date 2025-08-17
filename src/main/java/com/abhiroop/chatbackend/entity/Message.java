@@ -1,6 +1,6 @@
 package com.abhiroop.chatbackend.entity;
 
-import com.abhiroop.chatbackend.lib.ChatMessageType;
+import com.abhiroop.chatbackend.lib.enums.MessageType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +35,7 @@ public class Message {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false, updatable = false)
-    private ChatMessageType messageType;
+    private MessageType messageType;
 
     @Column(name = "content", nullable = false)
     private String content;

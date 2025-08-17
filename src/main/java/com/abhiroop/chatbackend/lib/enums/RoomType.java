@@ -1,9 +1,9 @@
-package com.abhiroop.chatbackend.lib;
+package com.abhiroop.chatbackend.lib.enums;
 
 import lombok.Getter;
 
 @Getter
-public enum ChatRoomType {
+public enum RoomType {
     PUBLIC,
     PRIVATE,
     DIRECT_MESSAGE

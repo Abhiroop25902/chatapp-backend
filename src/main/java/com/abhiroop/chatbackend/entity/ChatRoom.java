@@ -1,6 +1,6 @@
 package com.abhiroop.chatbackend.entity;
 
-import com.abhiroop.chatbackend.lib.ChatRoomType;
+import com.abhiroop.chatbackend.lib.enums.RoomType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -32,7 +32,7 @@ public class ChatRoom {
 
     @Column(name = "room_type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private ChatRoomType type;
+    private RoomType type;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false, referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_chat_room_user"))

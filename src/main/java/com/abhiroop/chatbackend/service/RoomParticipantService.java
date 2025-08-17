@@ -16,7 +16,7 @@ public class RoomParticipantService {
 
     public boolean validateUserRoomParticipation(UUID userId, UUID roomId) {
         return roomParticipantRepository.findByUser_IdAndChatRoom_Id(userId, roomId)
-                .map(roomParticipant -> roomParticipant.getRoomParticipantRole() != null)
+                .map(roomParticipant -> roomParticipant.getParticipantRole() != null)
                 .orElse(false);
     }
 }
