@@ -120,6 +120,30 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(ChatRoomNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleChatRoomNotFoundException(ChatRoomNotFoundException ex) {
+        log.warn("{}: {}", ErrorCode.CHAT_ROOM_NOT_FOUND, ex.chatRoomId, ex);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(
+                ErrorCode.CHAT_ROOM_NOT_FOUND, errors
+        ));
+    }
+
+    @ExceptionHandler(ChatRoomUpdateNotAuthorizedException.class)
+    public ResponseEntity<ErrorResponseDto> handleChatRoomUpdateNotAuthorizedException(ChatRoomUpdateNotAuthorizedException ex) {
+        log.warn("{}: {}", ErrorCode.CHAT_ROOM_UPDATE_NOT_AUTHORIZED, ex.userId, ex);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseDto(
+                ErrorCode.CHAT_ROOM_UPDATE_NOT_AUTHORIZED, errors
+        ));
+    }
+
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception ex) {
         log.error(ErrorCode.UNHANDLED_EXCEPTION_OCCURRED.toString(), ex);
