@@ -24,14 +24,14 @@ public class ChatRoomController {
     }
 
     @Secured("ROLE_USER")
-    @PutMapping("/api/v1/chatroom/new")
-    ResponseEntity<ChatRoomCreateResponseDto> createNewChatRoom(@RequestBody @Valid ChatRoomCreateRequestDto chatRoomCreateRequestDto) {
+    @PutMapping("/api/v1/chatroom")
+    ResponseEntity<ChatRoomCreateOrUpdateResponseDto> createNewChatRoom(@RequestBody @Valid ChatRoomCreateRequestDto chatRoomCreateRequestDto) {
         final var chatRoom = chatRoomService.createChatRoom(chatRoomCreateRequestDto);
 
         log.info("Created chat room with id: {}", chatRoom.getId());
 
         return ResponseEntity.ok().body(
-                ChatRoomCreateResponseDto.builder()
+                ChatRoomCreateOrUpdateResponseDto.builder()
                         .chatRoomId(chatRoom.getId())
                         .chatRoomName(chatRoom.getName())
                         .chatRoomDescription(chatRoom.getDescription())

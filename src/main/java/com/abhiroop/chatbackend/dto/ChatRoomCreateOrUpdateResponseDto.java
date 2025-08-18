@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-public record ChatRoomCreateResponseDto(
+public record ChatRoomCreateOrUpdateResponseDto(
         UUID chatRoomId,
         String chatRoomName,
         String chatRoomDescription,
