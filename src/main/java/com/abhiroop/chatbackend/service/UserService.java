@@ -11,6 +11,7 @@ import com.abhiroop.chatbackend.exception.UserNameGenerationFailureException;
 import com.abhiroop.chatbackend.repository.UserRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -157,4 +158,9 @@ public class UserService {
     public User getUserById(@NotNull UUID uuid) {
         return userRepository.findById(uuid).orElse(null);
     }
+
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
 }
