@@ -9,10 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -65,6 +64,14 @@ public class ChatRoomController {
                         .build()
         );
 
+    }
+
+    @Secured("ROLE_USER")
+    @DeleteMapping("/api/v1/chatroom/{chatRoomId}")
+    ResponseEntity<Void> deleteChatRoom(@PathVariable UUID chatRoomId) {
+        chatRoomService.deleteChatRoom(chatRoomId);
+
+        return ResponseEntity.noContent().build();
     }
 
 

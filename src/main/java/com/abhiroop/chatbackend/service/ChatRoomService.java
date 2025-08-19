@@ -1,7 +1,6 @@
 package com.abhiroop.chatbackend.service;
 
 import com.abhiroop.chatbackend.dto.ChatRoomCreateRequestDto;
-import com.abhiroop.chatbackend.dto.ChatRoomDeleteRequestDto;
 import com.abhiroop.chatbackend.dto.ChatRoomPatchRequestDto;
 import com.abhiroop.chatbackend.entity.ChatRoom;
 import com.abhiroop.chatbackend.entity.RoomParticipant;
@@ -95,9 +94,9 @@ public class ChatRoomService {
 
     @Transactional
     @Secured("ROLE_USER")
-    public void deleteChatRoom(ChatRoomDeleteRequestDto chatRoomDeleteRequestDto) {
+    public void deleteChatRoom(UUID chatRoomId) {
         final var user = userService.getCurrentUser();
-        final var chatRoom = getChatRoomOrThrowException(chatRoomDeleteRequestDto.chatRoomId());
+        final var chatRoom = getChatRoomOrThrowException(chatRoomId);
 
         verifyEditAccessOfUserForChatRoom(user, chatRoom);
 
