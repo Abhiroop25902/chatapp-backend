@@ -17,7 +17,7 @@ public class RoomParticipantService {
         this.roomParticipantRepository = roomParticipantRepository;
     }
 
-    public boolean validateUserRoomParticipation(UUID userId, UUID roomId) {
+    public boolean canUserSendMessageInChatRoom(UUID userId, UUID roomId) {
         return roomParticipantRepository.findByUser_IdAndChatRoom_Id(userId, roomId)
                 .map(roomParticipant -> roomParticipant.getParticipantRole() != null)
                 .orElse(false);
