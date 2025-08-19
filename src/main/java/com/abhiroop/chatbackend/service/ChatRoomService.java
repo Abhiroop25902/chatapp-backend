@@ -16,6 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ChatRoomService {
@@ -73,12 +74,10 @@ public class ChatRoomService {
     public ChatRoom updateChatRoomDetails(ChatRoomPatchRequestDto chatRoomPatchRequestDto) {
         final var user = userService.getCurrentUser();
 
-        final var presentChatRoom = chatRoomRepository.findById(chatRoomPatchRequestDto.chatRoomId()).orElseThrow(
-                () -> new ChatRoomNotFoundException("Chat Room Not Found", chatRoomPatchRequestDto.chatRoomId())
-        );
+        final var presentChatRoom = getChatRoomOrThrowException(chatRoomPatchRequestDto.chatRoomId());
 
         verifyEditAccessOfUserForChatRoom(user, presentChatRoom);
-        
+
         boolean updated = false;
         if (chatRoomPatchRequestDto.newRoomDescription() != null) {
             presentChatRoom.setDescription(chatRoomPatchRequestDto.newRoomDescription());
@@ -92,6 +91,13 @@ public class ChatRoomService {
 
         return updated ? chatRoomRepository.save(presentChatRoom) : presentChatRoom;
     }
+    
+    private ChatRoom getChatRoomOrThrowException(UUID chatRoomId) {
+        return chatRoomRepository.findById(chatRoomId).orElseThrow(
+                () -> new ChatRoomNotFoundException("Chat Room Not Found", chatRoomId)
+        );
+    }
+
 
     private void verifyEditAccessOfUserForChatRoom(User user, ChatRoom room) {
         // only owner and admin are allowed to update
