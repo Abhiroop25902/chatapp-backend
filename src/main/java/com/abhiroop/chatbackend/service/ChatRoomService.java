@@ -103,7 +103,7 @@ public class ChatRoomService {
         // only owner and admin are allowed to update
         final var roomParticipantOptional = roomParticipantService.getParticipantRole(user.getId(), room.getId());
 
-        if (roomParticipantOptional.isEmpty() || roomParticipantOptional.get() == ParticipantRole.MEMBER)
+        if (roomParticipantOptional.isEmpty() || !roomParticipantOptional.get().hasEditAccess())
             throw new ChatRoomUpdateNotAuthorizedException("This User is not authorized to update this chat room", user.getId());
     }
 }
