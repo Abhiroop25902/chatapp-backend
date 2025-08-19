@@ -134,12 +134,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ChatRoomEditNotAuthorizedException.class)
     public ResponseEntity<ErrorResponseDto> handleChatRoomUpdateNotAuthorizedException(ChatRoomEditNotAuthorizedException ex) {
-        log.warn("{}: {}", ErrorCode.CHAT_ROOM_UPDATE_NOT_AUTHORIZED, ex.userId, ex);
+        log.warn("{}: {}", ErrorCode.CHAT_ROOM_EDIT_NOT_AUTHORIZED, ex.userId, ex);
 
         Map<String, String> errors = new HashMap<>();
         errors.put(ERROR_REASON, ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseDto(
-                ErrorCode.CHAT_ROOM_UPDATE_NOT_AUTHORIZED, errors
+                ErrorCode.CHAT_ROOM_EDIT_NOT_AUTHORIZED, errors
         ));
     }
 
