@@ -1,12 +1,13 @@
 package com.abhiroop.chatbackend.service;
 
 import com.abhiroop.chatbackend.dto.ChatRoomCreateRequestDto;
+import com.abhiroop.chatbackend.dto.ChatRoomDeleteRequestDto;
 import com.abhiroop.chatbackend.dto.ChatRoomPatchRequestDto;
 import com.abhiroop.chatbackend.entity.ChatRoom;
 import com.abhiroop.chatbackend.entity.RoomParticipant;
 import com.abhiroop.chatbackend.entity.User;
+import com.abhiroop.chatbackend.exception.ChatRoomEditNotAuthorizedException;
 import com.abhiroop.chatbackend.exception.ChatRoomNotFoundException;
-import com.abhiroop.chatbackend.exception.ChatRoomUpdateNotAuthorizedException;
 import com.abhiroop.chatbackend.lib.enums.ParticipantRole;
 import com.abhiroop.chatbackend.lib.enums.RoomType;
 import com.abhiroop.chatbackend.repository.ChatRoomRepository;
@@ -91,7 +92,19 @@ public class ChatRoomService {
 
         return updated ? chatRoomRepository.save(presentChatRoom) : presentChatRoom;
     }
-    
+
+    @Transactional
+    @Secured("ROLE_USER")
+    public void deleteChatRoom(ChatRoomDeleteRequestDto chatRoomDeleteRequestDto) {
+        final var user = userService.getCurrentUser();
+        final var chatRoom = getChatRoomOrThrowException(chatRoomDeleteRequestDto.chatRoomId());
+
+        verifyEditAccessOfUserForChatRoom(user, chatRoom);
+
+        chatRoom.setActive(false);
+        chatRoomRepository.save(chatRoom);
+    }
+
     private ChatRoom getChatRoomOrThrowException(UUID chatRoomId) {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(
                 () -> new ChatRoomNotFoundException("Chat Room Not Found", chatRoomId)
