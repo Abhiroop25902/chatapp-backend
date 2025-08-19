@@ -36,7 +36,7 @@ public class Message {
     @Column(name = "type", nullable = false, updatable = false)
     private MessageType messageType;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "varchar(max)")
     private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
