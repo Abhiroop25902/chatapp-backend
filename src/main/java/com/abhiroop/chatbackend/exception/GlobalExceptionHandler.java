@@ -143,6 +143,17 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(InvalidMessageException.class)
+    public ResponseEntity<ErrorResponseDto> handleInvalidMessageException(InvalidMessageException ex) {
+        log.warn("Code: {}; Message: {}; ChatRoomId:{} ; UserId:{}", ErrorCode.INVALID_MESSAGE_TYPE, ex.getMessage(), ex.getChatRoomId(), ex.getUserId());
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ErrorResponseDto(
+                ErrorCode.CHAT_ROOM_EDIT_NOT_AUTHORIZED, errors
+        ));
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception ex) {
