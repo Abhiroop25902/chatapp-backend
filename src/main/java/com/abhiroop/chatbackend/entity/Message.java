@@ -53,8 +53,7 @@ public class Message {
     @Column(name = "sent_at", nullable = false, updatable = false)
     private LocalDateTime sentAt;
 
-    @UpdateTimestamp
-    @Column(name = "edited_at", nullable = false)
+    @Column(name = "edited_at")
     private LocalDateTime editedAt;
 
 }
