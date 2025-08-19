@@ -45,7 +45,7 @@ public class Message {
     private Message replyToMessage = null;
 
     @Builder.Default
-    @Column(name = "is_deleted", updatable = false, nullable = false)
+    @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted = false;
 
     @CreationTimestamp
