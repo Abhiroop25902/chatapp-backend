@@ -100,6 +100,8 @@ public class ChatRoomService {
 
         verifyEditAccessOfUserForChatRoom(user, chatRoom);
 
+        if (!chatRoom.isActive()) return;
+
         chatRoom.setActive(false);
         chatRoomRepository.save(chatRoom);
     }
