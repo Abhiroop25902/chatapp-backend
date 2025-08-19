@@ -2,13 +2,10 @@ package com.abhiroop.chatbackend.entity;
 
 import com.abhiroop.chatbackend.lib.enums.MessageType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +13,8 @@ import java.util.UUID;
 @Entity
 @Table(name = "messages", schema = "chat_app")
 @Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
