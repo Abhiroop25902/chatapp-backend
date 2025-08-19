@@ -106,7 +106,7 @@ public class ChatRoomService {
         chatRoomRepository.save(chatRoom);
     }
 
-    private ChatRoom getChatRoomOrThrowException(UUID chatRoomId) {
+    public ChatRoom getChatRoomOrThrowException(UUID chatRoomId) {
         return chatRoomRepository.findById(chatRoomId).orElseThrow(
                 () -> new ChatRoomNotFoundException("Chat Room Not Found", chatRoomId)
         );
