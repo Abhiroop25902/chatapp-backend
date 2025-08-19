@@ -132,8 +132,8 @@ public class GlobalExceptionHandler {
         ));
     }
 
-    @ExceptionHandler(ChatRoomUpdateNotAuthorizedException.class)
-    public ResponseEntity<ErrorResponseDto> handleChatRoomUpdateNotAuthorizedException(ChatRoomUpdateNotAuthorizedException ex) {
+    @ExceptionHandler(ChatRoomEditNotAuthorizedException.class)
+    public ResponseEntity<ErrorResponseDto> handleChatRoomUpdateNotAuthorizedException(ChatRoomEditNotAuthorizedException ex) {
         log.warn("{}: {}", ErrorCode.CHAT_ROOM_UPDATE_NOT_AUTHORIZED, ex.userId, ex);
 
         Map<String, String> errors = new HashMap<>();
