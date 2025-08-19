@@ -4,6 +4,7 @@ import com.abhiroop.chatbackend.dto.ChatRoomCreateRequestDto;
 import com.abhiroop.chatbackend.dto.ChatRoomPatchRequestDto;
 import com.abhiroop.chatbackend.entity.ChatRoom;
 import com.abhiroop.chatbackend.entity.RoomParticipant;
+import com.abhiroop.chatbackend.entity.User;
 import com.abhiroop.chatbackend.exception.ChatRoomNotFoundException;
 import com.abhiroop.chatbackend.exception.ChatRoomUpdateNotAuthorizedException;
 import com.abhiroop.chatbackend.lib.enums.ParticipantRole;
@@ -76,13 +77,8 @@ public class ChatRoomService {
                 () -> new ChatRoomNotFoundException("Chat Room Not Found", chatRoomPatchRequestDto.chatRoomId())
         );
 
-        // only owner and admin are allowed to update
-        final var roomParticipantOptional = roomParticipantService.getParticipantRole(user.getId(), presentChatRoom.getId());
-
-        if (roomParticipantOptional.isEmpty() || roomParticipantOptional.get() == ParticipantRole.MEMBER)
-            throw new ChatRoomUpdateNotAuthorizedException("This User is not authorized to update this chat room", user.getId());
-
-        // security checks done, now update
+        verifyEditAccessOfUserForChatRoom(user, presentChatRoom);
+        
         boolean updated = false;
         if (chatRoomPatchRequestDto.newRoomDescription() != null) {
             presentChatRoom.setDescription(chatRoomPatchRequestDto.newRoomDescription());
@@ -95,5 +91,13 @@ public class ChatRoomService {
         }
 
         return updated ? chatRoomRepository.save(presentChatRoom) : presentChatRoom;
+    }
+
+    private void verifyEditAccessOfUserForChatRoom(User user, ChatRoom room) {
+        // only owner and admin are allowed to update
+        final var roomParticipantOptional = roomParticipantService.getParticipantRole(user.getId(), room.getId());
+
+        if (roomParticipantOptional.isEmpty() || roomParticipantOptional.get() == ParticipantRole.MEMBER)
+            throw new ChatRoomUpdateNotAuthorizedException("This User is not authorized to update this chat room", user.getId());
     }
 }
