@@ -154,6 +154,30 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    @ExceptionHandler(MessageNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleMessageNotFoundException(MessageNotFoundException ex) {
+        log.warn("{}: {}", ErrorCode.CHAT_ROOM_NOT_FOUND, ex.messageId, ex);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(
+                ErrorCode.CHAT_ROOM_NOT_FOUND, errors
+        ));
+    }
+
+    @ExceptionHandler(MessageEditNotAuthorizedException.class)
+    public ResponseEntity<ErrorResponseDto> handleMessageEditNotAuthorizedException(MessageEditNotAuthorizedException ex) {
+        log.warn("Code: {}; MessageId: {}; EditorUserId:{}", ErrorCode.MESSAGE_EDIT_NOT_AUTHORIZED, ex.messageId, ex.editorUserId, ex);
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put(ERROR_REASON, ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(
+                ErrorCode.CHAT_ROOM_NOT_FOUND, errors
+        ));
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDto> handleGenericException(Exception ex) {
