@@ -1,8 +1,11 @@
 package com.abhiroop.chatbackend.service;
 
 import com.abhiroop.chatbackend.dto.MessageCreateRequestDto;
+import com.abhiroop.chatbackend.dto.MessagePatchRequestDto;
 import com.abhiroop.chatbackend.entity.Message;
 import com.abhiroop.chatbackend.exception.InvalidMessageException;
+import com.abhiroop.chatbackend.exception.MessageEditNotAuthorizedException;
+import com.abhiroop.chatbackend.exception.MessageNotFoundException;
 import com.abhiroop.chatbackend.lib.enums.MessageType;
 import com.abhiroop.chatbackend.repository.MessageRepository;
 import jakarta.transaction.Transactional;
@@ -13,6 +16,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -88,5 +93,32 @@ public class MessageService {
                         .content(messageContent)
                         .build()
         );
+    }
+
+    @Secured("ROLE_USER")
+    @Transactional
+    public Message updateMessage(MessagePatchRequestDto messagePatchRequestDto) {
+        final var editor = userService.getCurrentUser();
+
+        final var message = messageRepository.findById(messagePatchRequestDto.messageId()).orElseThrow(
+                () -> new MessageNotFoundException("Message with provided id not found", messagePatchRequestDto.messageId())
+        );
+
+        if (!message.getSender().getId().equals(editor.getId())) {
+            throw new MessageEditNotAuthorizedException("You are not authorized to edit this message, this will be reported", editor.getId(), message.getId());
+        }
+
+        if (message.getMessageType() == MessageType.SYSTEM) {
+            throw new MessageEditNotAuthorizedException("You are not authorized to edit this message, this will be reported", editor.getId(), message.getId());
+        }
+
+        if (EnumSet.of(MessageType.FILE, MessageType.IMAGE).contains(message.getMessageType())) {
+            //TODO: handle delete of existing link
+        }
+
+        message.setContent(messagePatchRequestDto.content());
+        message.setEditedAt(LocalDateTime.now());
+
+        return messageRepository.save(message);
     }
 }
