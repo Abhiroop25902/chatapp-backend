@@ -66,6 +66,17 @@ public class ChatRoomService {
                         .build()
         );
 
+        if (chatRoom.getType() == RoomType.DIRECT_MESSAGE) {
+            final var otherUser = userService.getUserById(chatRoomCreateRequestDto.otherUserId());
+            roomParticipantService.save(
+                    RoomParticipant.builder()
+                            .chatRoom(savedChatRoom)
+                            .user(otherUser)
+                            .participantRole(ParticipantRole.OWNER)
+                            .build()
+            );
+        }
+
         return savedChatRoom;
     }
 
